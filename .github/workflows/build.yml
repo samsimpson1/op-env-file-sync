@@ -1,0 +1,23 @@
+name: Build and push image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker-login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          docker build . -t ghcr.io/samsimpson1/op-env-file-sync:latest
+          docker push ghcr.io/samsimpson1/op-env-file-sync:latest

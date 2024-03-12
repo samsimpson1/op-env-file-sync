@@ -1,4 +1,4 @@
-function Sync-Env-File {
+function Sync-EnvFile {
   $env_out_file = ""
 
   $items = op item list --format=json | ConvertFrom-Json
@@ -17,13 +17,15 @@ function Sync-Env-File {
 ${env_var_line}"
     }
   }
-  
+  if ($env_out_file -eq "") {
+    return
+  }
   $env_out_file | Out-File "$($Env:SYNC_OUTPUT_ENV_FILE)"
 }
 
 while (1) {
   Write-Host "Start sync"
-  Sync-Env-File
+  Sync-EnvFile
   Write-Host "Sleeping"
   Start-Sleep -Seconds $Env:SYNC_INTERVAL_SECONDS
 }
